@@ -1,0 +1,46 @@
+// Deadlock Handling
+void deadlockHandlingMenu() {
+    cout << "\n--- Deadlock Avoidance using Banker's Algorithm ---\n";
+    bankersAlgorithm();
+}
+
+void bankersAlgorithm() {
+    int n, m;
+    cout << "Enter number of processes: "; cin >> n;
+    cout << "Enter number of resources: "; cin >> m;
+
+    int alloc[n][m], max[n][m], avail[m], need[n][m];
+    cout << "Enter allocation matrix:\n";
+    for(int i=0;i<n;i++) for(int j=0;j<m;j++) cin >> alloc[i][j];
+
+    cout << "Enter maximum matrix:\n";
+    for(int i=0;i<n;i++) for(int j=0;j<m;j++) cin >> max[i][j];
+
+    cout << "Enter available resources:\n";
+    for(int j=0;j<m;j++) cin >> avail[j];
+
+    for(int i=0;i<n;i++) for(int j=0;j<m;j++) need[i][j] = max[i][j] - alloc[i][j];
+
+    bool finish[n] = {}; vector<int> safeSeq;
+    while(safeSeq.size() < n) {
+        bool found = false;
+        for(int i=0;i<n;i++) {
+            if(!finish[i]) {
+                bool canRun = true;
+                for(int j=0;j<m;j++) if(need[i][j] > avail[j]) canRun = false;
+                if(canRun) {
+                    for(int j=0;j<m;j++) avail[j] += alloc[i][j];
+                    finish[i] = true; found = true;
+                    safeSeq.push_back(i);
+                }
+            }
+        }
+        if(!found) break;
+    }
+    if(safeSeq.size() == n) {
+        cout << "Safe Sequence: ";
+        for(int i : safeSeq) cout << "P" << i << " ";
+        cout << "\nSystem is in a safe state.\n";
+    } else {
+        cout << "System is in DEADLOCK.\n";
+    }
