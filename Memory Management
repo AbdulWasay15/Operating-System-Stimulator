@@ -1,0 +1,50 @@
+// Memory Management
+void memoryManagementMenu() {
+    cout << "\n--- Memory Management using Paging ---\n";
+    pagingSimulation();
+}
+
+void pagingSimulation() {
+    int memSize, pageSize;
+    cout << "Enter memory size: "; cin >> memSize;
+    cout << "Enter page size: "; cin >> pageSize;
+    int numPages = memSize / pageSize;
+    cout << "Total number of pages: " << numPages << "\n";
+    cout << "Enter number of processes: ";
+    int n; cin >> n;
+    for(int i=0; i<n; i++) {
+        int processSize;
+        cout << "Process " << i+1 << " size: "; cin >> processSize;
+        int pagesNeeded = (processSize + pageSize - 1) / pageSize;
+        if(pagesNeeded > numPages) {
+            cout << "Not enough memory for process " << i+1 << "\n";
+        } else {
+            cout << "Process " << i+1 << " requires " << pagesNeeded << " pages.\n";
+            numPages -= pagesNeeded;
+        }
+    }
+}
+
+// IPC Simulation
+void ipcSimulationMenu() {
+    cout << "\n--- Logical Inter-Process Communication ---\n";
+    logicalIPC();
+}
+
+void logicalIPC() {
+    queue<string> messageQueue;
+    string msg; char option;
+    do {
+        cout << "Send a message: ";
+        cin.ignore(); getline(cin, msg);
+        messageQueue.push(msg);
+        cout << "Send another message? (y/n): ";
+        cin >> option;
+    } while(option == 'y');
+
+    cout << "\nMessages received:\n";
+    while(!messageQueue.empty()) {
+        cout << "-> " << messageQueue.front() << "\n";
+        messageQueue.pop();
+    }
+}
